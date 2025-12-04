@@ -4,20 +4,19 @@ import DataGrid from './DataGrid';
 
 function App() {
 
-
-
   const columns = [
   { field: "name", headerName: "Name", width: 200 },
   { field: "age", headerName: "Age", width: 100 },
+  { field: "email", headerName: "Email", width:300},
   { field: "email", headerName: "Email", width:300}
 ];
 
 const data = [
-  { name: "Deep", "age": 24 , "Email": "abc@gmail.com"},
-  { name: "Ravi", "age": 30 , "Email": "abc@gmail.com"},
-  { name: "Neha", "age": 22 , "Email": "abc@gmail.com"},
-  { name: "Sara", "age": 27 , "Email": "abc@gmail.com"},
-  { name: "Amit", "age": 40 , "Email": "abc@gmail.com"},
+  { name: "Deep", "age": 24 , email: "abc@gmail.com"},
+  { name: "Ravi", "age": 30 , email: "abc@gmail.com"},
+  { name: "Neha", "age": 22 , email: "abc@gmail.com"},
+  { name: "Sara", "age": 27 , email: "abc@gmail.com"},
+  { name: "Amit", "age": 40 , email: "abc@gmail.com"},
 ];
 
 
