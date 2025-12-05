@@ -8,7 +8,7 @@ function App() {
 
   const columns = [
   { field: "name", headerName: "Name", width: 200 , isSort: true, color: "red"},
-  { field: "age", headerName: "Age", width: 100 },
+  { field: "age", headerName: "Age", width: 100, isSort:true},
   { field: "email", headerName: "Email", width:300}
   // { field: "email", headerName: "Email", width:300}
 ];
@@ -19,6 +19,7 @@ const data = [
   { name: "Neha", "age": 22 , email: "abc@gmail.com"},
   { name: "Sara", "age": 27 , email: "abc@gmail.com"},
   { name: "Amit", "age": 40 , email: "abc@gmail.com"},
+  {name : "payal", age:22, email:"payal@gmail.com"}
 ];
 
   // const [sortConfig, setSortConfig] = useState(null);
@@ -88,11 +89,10 @@ const data = [
         <TableUse
           columns={columns}
           data={data}
-          pageSize={2}
+          pageSize={4}
           sortable={true}
           filterable={true}
           // onRowClick={(row) => alert(JSON.stringify(row))}
-
         />
 
     </>
