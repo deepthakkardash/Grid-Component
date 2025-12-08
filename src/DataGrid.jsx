@@ -21,10 +21,10 @@ export default function DataGrid({
 
       <input
         type="text"
-        className="form-control w-25 mb-3"
+        className="form-control w-25 mb-4 ms-5"
         placeholder="Search..."
         value={search}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={(e) => {onSearchChange(e.target.value); onPageChange(1); }}
       />
       )}
 
@@ -33,20 +33,19 @@ export default function DataGrid({
       {/* TABLE */}
       
       
-      <table className="table">
+      <table className="table text-center mx-auto">
         <thead>
           <tr>
             {columns.map((col) => (
               <th
                 key={col.field}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", width:col.width }}
 
-                // {so}
-                onClick={() => onSortChange(col.field)}
+                onClick={() => col.isSort && onSortChange(col.field)}
               >
                 {col.headerName}
 
-                {sortConfig?.field === col.field && sortable &&
+                {sortConfig?.field === col.field && sortable && col.isSort &&
                   (sortConfig.direction === "asc" ? " ↑" : " ↓")}
               </th>
             ))}
