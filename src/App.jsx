@@ -34,7 +34,6 @@ const data = [
           pageSize={2}
           sortable={true}
           filterable={true}
-          // onRowClick={(row) => alert(JSON.stringify(row))}
         />
 
     </>

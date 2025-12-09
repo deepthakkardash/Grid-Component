@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import DataGrid from "../DataGrid";
-// import DataGrid from "./DataGrid";
 
 export default function TableUse({ 
   columns, 

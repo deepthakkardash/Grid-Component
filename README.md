@@ -1,55 +1,83 @@
-#DataGrid Component
+# DataGrid React Component
 
-A reusable React DataGrid component with searching, sorting, and pagination.
-The component is designed with a clean separation of concerns:
+A reusable and configurable DataGrid component built using React.  
+This component supports searching, sorting, and pagination, and is designed with clear separation between UI and logic.
 
-TableUse → handles business logic (filtering, sorting, paging)
+It can be used in dashboards, admin panels, and common CRUD-based applications.
 
-DataGrid → handles UI rendering and user interactions
+---
 
-This makes the component easy to maintain, extend, and integrate with backend APIs later.
+## Features
 
-Features
+- Dynamic column configuration
+- Optional search (filtering)
+- Column-based sorting (ascending / descending)
+- Pagination support
+- Graceful empty data handling
+- Bootstrap-compatible layout
+- Reusable and maintainable structure
 
-Dynamic columns configuration
+---
 
-Client-side search (filter across all fields)
+## Component Design
 
-Column-based sorting (ascending / descending)
+The DataGrid is implemented using two components to maintain separation of concerns.
 
-Pagination support
+### `TableUse.jsx` (Container)
 
-Optional sorting and filtering
+Responsibilities:
+- Manages search, sorting, and pagination states
+- Handles data filtering and sorting
+- Passes processed data to the UI component
 
-Controlled component design (state handled outside UI)
+### `DataGrid.jsx` (Presentational)
 
-Bootstrap-compatible (no forced styling)
+Responsibilities:
+- Renders the search input, table, and pagination
+- Handles user interactions
+- Displays data based on received props
 
-Component Structure
+---
+
+## Project Structure
+
+```
+
 src/
- ├─ DataGrid.jsx     // Presentational (UI) component
- ├─ TableUse.jsx     // Container (logic) component
- └─ App.jsx          // Example usage
+├── DataGrid.jsx
+├── Component/
+│   └── TableUse.jsx
+├── App.jsx
 
-Installation
+````
+
+---
+
+## Installation
 
 Copy the following files into your project:
 
-DataGrid.jsx
+- `DataGrid.jsx`
+- `TableUse.jsx`
 
-TableUse.jsx
+If you are using Bootstrap, install it:
 
-(Optional) Install Bootstrap for default styling:
-
+```bash
 npm install bootstrap
+````
 
+Import Bootstrap CSS once in your project:
 
-And import it in your root file (e.g. main.jsx or App.jsx):
-
+```js
 import "bootstrap/dist/css/bootstrap.min.css";
+```
 
-Basic Usage
-import TableUse from "./TableUse";
+---
+
+## Usage Example
+
+```jsx
+import TableUse from "./Component/TableUse";
 
 const columns = [
   { field: "name", headerName: "Name", width: 400, isSort: true },
@@ -58,12 +86,12 @@ const columns = [
 ];
 
 const data = [
-  { name: "Deep", age: 24, email: "deep@gmail.com" },
+  { name: "Deep", age: 24, email: "abc@gmail.com" },
   { name: "Ravi", age: 30, email: "ravi@gmail.com" },
   { name: "Neha", age: 22, email: "neha@gmail.com" }
 ];
 
-export default function App() {
+function App() {
   return (
     <TableUse
       columns={columns}
@@ -75,84 +103,77 @@ export default function App() {
   );
 }
 
-Props Reference
-TableUse Props (Container Component)
-Prop	Type	Required	Description
-columns	array	✅ Yes	Column configuration
-data	array	✅ Yes	Data rows
-pageSize	number	❌ No	Rows per page (default: 5)
-sortable	boolean	❌ No	Enable/disable sorting
-filterable	boolean	❌ No	Enable/disable search
-DataGrid Props (UI Component)
-Prop	Type	Description
-columns	array	Column definitions
-data	array	Paginated data
-search	string	Search value
-onSearchChange	function	Search callback
-sortConfig	object	{ field, direction }
-onSortChange	function	Sort callback
-page	number	Current page
-totalPages	number	Total pages
-onPageChange	function	Pagination callback
-sortable	boolean	Sorting enabled
-filterable	boolean	Filtering enabled
-Column Configuration
+export default App;
+```
+
+---
+
+## Props
+
+### `TableUse`
+
+| Prop         | Type    | Required | Description                  |
+| ------------ | ------- | -------- | ---------------------------- |
+| `columns`    | array   | Yes      | Column definitions           |
+| `data`       | array   | Yes      | Table row data               |
+| `pageSize`   | number  | No       | Number of rows per page      |
+| `sortable`   | boolean | No       | Enables column sorting       |
+| `filterable` | boolean | No       | Enables search functionality |
+
+---
+
+## Column Definition Format
+
+```js
 {
-  field: "name",        // Must match data key
-  headerName: "Name",   // Displayed in table header
-  width: 400,           // Optional column width
-  isSort: true          // Enables sort for this column
+  field: "name",
+  headerName: "Name",
+  width: 400,
+  isSort: true
 }
+```
 
+* `field`: Key from the data object
+* `headerName`: Column header text
+* `width`: Column width
+* `isSort`: Enables sorting for the column
 
-Notes:
+---
 
-Sorting works only if isSort is true
+## Behavior Details
 
-field must exist in the data object
+* Search filters across all data fields
+* Sorting applies only to columns marked with `isSort`
+* Sorting toggles between ascending and descending order
+* Pagination updates automatically after search or sorting
+* Page resets to first page when search input changes
+* Displays "No Data" when no rows are available
 
-Component Behavior
+---
 
-Searching resets page to 1
+## Limitations
 
-Sorting toggles between ascending and descending
+* Client-side data handling only
+* Edit and Delete buttons are presentational
+* No row click handler
+* No custom cell rendering
 
-Pagination recalculates automatically after search or sort
+---
 
-All processing is client-side
+## Possible Enhancements
 
-Empty state handled automatically (No Data)
+* Server-side pagination and sorting
+* Row interaction callbacks
+* Column-based filtering
+* Custom cell renderers
+* TypeScript support
 
-Limitations
+---
 
-No server-side sorting or pagination
+## Conclusion
 
-No per-column filters
+This DataGrid component is built to demonstrate:
 
-No row selection or checkbox support
-
-Edit/Delete buttons are static placeholders
-
-Future Enhancements
-
-Server-side pagination, sorting, filtering
-
-Custom cell renderers
-
-Row click callbacks
-
-Column visibility control
-
-Debounced search
-
-TypeScript support
-
-Design Philosophy
-
-Reusable
-
-Composable
-
-Backend-ready
-
-Clean separation of UI and logic
+* Reusable component design
+* Clean separation of logic and UI
+* Practical React patterns
