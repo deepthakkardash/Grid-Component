@@ -1,29 +1,42 @@
 import { useMemo, useState } from "react";
 import DataGrid from "../DataGrid";
 
-export default function TableUse({ 
+export default function  TableUse({ 
   columns, 
   data, 
   pageSize = 5,
   sortable = false,
   filterable = false,
-
+  DeleteFunction,
+  editFunction
 }) {
   const [sortConfig, setSortConfig] = useState(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
   // Filtering
-  const filteredData = useMemo(() => {
-    if (search.trim() === "" || filterable == false) return data;
+const filteredData = useMemo(() => {
+  if (!filterable || search.trim() === "") return data;
 
-    return data.filter((row) =>
-      Object.values(row)
-        .join(" ")
+  // Get only searchable columns
+  let searchableColumns = columns
+    .filter(col => col.searchable)
+    .map(col => col.field);
+    
+
+  return data.filter(row =>
+    searchableColumns.some(colKey => {
+      const value = row[colKey];
+      if (value === null || value === undefined) return false;
+
+      return value
+        .toString()
         .toLowerCase()
-        .includes(search.toLowerCase())
-    );
-  }, [data, search]);
+        .includes(search.toLowerCase());
+    })
+  );
+}, [data, search, columns, filterable]);
+
 
   // Sorting
   const sortedData = useMemo(() => {
@@ -55,6 +68,9 @@ export default function TableUse({
     });
   };
 
+  
+
+
   return (
     <DataGrid
       columns={columns}
@@ -68,6 +84,8 @@ export default function TableUse({
       onPageChange={setPage}
       sortable = {sortable}
       filterable = {filterable}
+      DeleteFunction={DeleteFunction}
+      editFunction={editFunction}
     />
   );
 }

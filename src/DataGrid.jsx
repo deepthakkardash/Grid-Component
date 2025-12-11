@@ -10,8 +10,10 @@ export default function DataGrid({
   page,
   totalPages,
   onPageChange,
-  sortable = false,
-  filterable = false,
+  sortable = true,
+  filterable = true,
+  editFunction,
+  DeleteFunction
 }) {
   return (
     <div>
@@ -66,14 +68,14 @@ export default function DataGrid({
                   <td key={col.field}>{row[col.field]}</td>
                 ))}
                 <td> 
-                  <button className="btn btn-outline-primary px-3" >
+                  <button className="btn btn-outline-primary px-3" onClick={()=>editFunction(row)}>
                     Edit
                   </button>
                 </td>
                 
                 
                 <td> 
-                  <button className="btn btn-danger px-3" >Delete</button>
+                  <button className="btn btn-danger px-3" onClick={()=>DeleteFunction(row)}>Delete</button>
                 </td>
               </tr>
             ))
