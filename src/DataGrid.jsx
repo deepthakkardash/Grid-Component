@@ -13,12 +13,30 @@ export default function DataGrid({
   sortable = true,
   filterable = true,
   editFunction,
-  DeleteFunction
+  DeleteFunction,
+  setSearchCol,
+  searchCol=null,
 }) {
+
+
+  function clickCol(col)
+  {
+
+    console.log("Function : "+col.field);
+    
+
+    col.isSort && onSortChange(col.field);
+
+    filterable && col.searchable && setSearchCol(col.field);
+
+    console.log(searchCol);
+    
+  }
+
   return (
     <div>
       {/* SEARCH */}
-      {
+      {/* {
         filterable && (
 
       <input
@@ -28,7 +46,7 @@ export default function DataGrid({
         value={search}
         onChange={(e) => {onSearchChange(e.target.value); onPageChange(1); }}
       />
-      )}
+      )} */}
 
 
 
@@ -43,7 +61,9 @@ export default function DataGrid({
                 key={col.field}
                 style={{ cursor: "pointer", width:col.width }}
 
-                onClick={() => col.isSort && onSortChange(col.field)}
+                onClick={()=> clickCol(col)}
+                  
+                  // () => col.isSort && onSortChange(col.field)}
               >
                 {col.headerName}
 
@@ -52,9 +72,32 @@ export default function DataGrid({
               </th>
             ))}
           </tr>
+            {searchCol &&(
+              <tr>
+                {
+                  columns.map((col)=>{
+                    return (<td key={col.field}>
+                      {
+                        col.field==searchCol && (
+                        <input type="text" 
+                        className="form-control" 
+                        placeholder={`Search ${col.headerName}`} 
+                        onChange={(e) => {onSearchChange(e.target.value); onPageChange(1); }}></input>
+                      )
+                      }
+                    </td>)
+                  })
+                }
+              </tr>
+            )
+            }
         </thead>
 
         <tbody>
+
+
+
+
           {data.length === 0 ? (
             <tr>
               <td colSpan={columns.length} className="text-center">

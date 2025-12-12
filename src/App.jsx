@@ -8,9 +8,8 @@ function App() {
 
   const columns = [
   { field: "name", headerName: "Name", width: 400 , isSort: true, searchable: true},
-  { field: "age", headerName: "Age", width: 300, isSort:true, searchable:true},
-  { field: "email", headerName: "Email", width:800, }
-  // { field: "email", headerName: "Email", width:300}
+  { field: "age", headerName: "Age", width: 300, isSort:true, searchable:false},
+  { field: "email", headerName: "Email", width:800, searchable:true}
 ];
 
 const data = [
@@ -82,28 +81,21 @@ function DeleteFunction(row)
   const [sortConfig, setSortConfig] = useState(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [searchCol, setSearchCol]=useState("")
 
   // Filtering
 const filteredData = useMemo(() => {
   if (!filterable || search.trim() === "") return data;
 
-  // Get only searchable columns
-  let searchableColumns = columns
-    .filter(col => col.searchable)
-    .map(col => col.field);
-    
-
-  return data.filter(row =>
-    searchableColumns.some(colKey => {
-      const value = row[colKey];
-      if (value === null || value === undefined) return false;
+  return data.filter((row) =>{
+      
+      let value = row[searchCol];
 
       return value
         .toString()
         .toLowerCase()
         .includes(search.toLowerCase());
     })
-  );
 }, [data, search, columns, filterable]);
 
 
@@ -136,6 +128,10 @@ const filteredData = useMemo(() => {
       return { field, direction: "asc" };
     });
   };
+
+  const handleSearchCol = (field) =>{
+    setSearchCol(field);
+  }
 
 
 
@@ -174,6 +170,8 @@ const filteredData = useMemo(() => {
               filterable = {true}
               DeleteFunction={DeleteFunction}
               editFunction={editFunction}
+              searchCol={searchCol}
+              setSearchCol={handleSearchCol}
             />
 
 <br />
