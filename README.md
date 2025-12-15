@@ -1,72 +1,71 @@
 # DataGrid React Component
 
-A reusable and configurable DataGrid component built using React.  
-This component supports searching, sorting, and pagination, and is designed with clear separation between UI and logic.
+A reusable and configurable DataGrid component built using React.
+This component supports **column-based searching**, **sorting**, and **pagination**, with a clear separation between logic and UI.
 
-It can be used in dashboards, admin panels, and common CRUD-based applications.
+It is suitable for dashboards, admin panels, and CRUD-based applications.
 
 ---
 
 ## Features
 
-- Dynamic column configuration
-- Optional search (filtering)
-- Column-based sorting (ascending / descending)
-- Pagination support
-- Graceful empty data handling
-- Bootstrap-compatible layout
-- Reusable and maintainable structure
+* Dynamic column configuration
+* Column-wise search (search input appears below selected column header)
+* Column-based sorting (ascending / descending)
+* Client-side pagination
+* Optional search and sorting per column
+* Graceful empty state handling
+* Bootstrap-compatible layout
+* Clean separation of logic and presentation
 
 ---
 
 ## Component Design
 
-The DataGrid is implemented using two components to maintain separation of concerns.
+The DataGrid follows a **container + presentational** pattern.
 
-### `TableUse.jsx` (Container)
+### `App.jsx` (Container / Controller)
 
 Responsibilities:
-- Manages search, sorting, and pagination states
-- Handles data filtering and sorting
-- Passes processed data to the UI component
+
+* Holds sorting, search, pagination state
+* Performs filtering, sorting, and pagination using `useMemo`
+* Passes processed data and handlers to `DataGrid`
 
 ### `DataGrid.jsx` (Presentational)
 
 Responsibilities:
-- Renders the search input, table, and pagination
-- Handles user interactions
-- Displays data based on received props
+
+* Renders table headers, rows, search inputs, and pagination
+* Triggers sorting when column headers are clicked
+* Displays column-specific search input below the active column
+* Calls callbacks provided by the parent
 
 ---
 
 ## Project Structure
 
 ```
-
 src/
 ├── DataGrid.jsx
-├── Component/
-│   └── TableUse.jsx
 ├── App.jsx
-
-````
+```
 
 ---
 
 ## Installation
 
-Copy the following files into your project:
+Copy the following file into your project:
 
-- `DataGrid.jsx`
-- `TableUse.jsx`
+* `DataGrid.jsx`
 
-If you are using Bootstrap, install it:
+Install Bootstrap (optional, for styling):
 
 ```bash
 npm install bootstrap
-````
+```
 
-Import Bootstrap CSS once in your project:
+Import Bootstrap once:
 
 ```js
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -77,48 +76,48 @@ import "bootstrap/dist/css/bootstrap.min.css";
 ## Usage Example
 
 ```jsx
-import TableUse from "./Component/TableUse";
-
-const columns = [
-  { field: "name", headerName: "Name", width: 400, isSort: true },
-  { field: "age", headerName: "Age", width: 300, isSort: true },
-  { field: "email", headerName: "Email", width: 800 }
-];
-
-const data = [
-  { name: "Deep", age: 24, email: "abc@gmail.com" },
-  { name: "Ravi", age: 30, email: "ravi@gmail.com" },
-  { name: "Neha", age: 22, email: "neha@gmail.com" }
-];
-
-function App() {
-  return (
-    <TableUse
-      columns={columns}
-      data={data}
-      pageSize={2}
-      sortable={true}
-      filterable={true}
-    />
-  );
-}
-
-export default App;
+<DataGrid
+  columns={columns}
+  data={paginatedData}
+  search={search}
+  onSearchChange={setSearch}
+  sortConfig={sortConfig}
+  onSortChange={handleSort}
+  page={page}
+  totalPages={totalPages}
+  onPageChange={setPage}
+  sortable={true}
+  filterable={true}
+  searchCol={searchCol}
+  setSearchCol={setSearchCol}
+  editFunction={editFunction}
+  DeleteFunction={DeleteFunction}
+/>
 ```
 
 ---
 
 ## Props
 
-### `TableUse`
+### `DataGrid`
 
-| Prop         | Type    | Required | Description                  |
-| ------------ | ------- | -------- | ---------------------------- |
-| `columns`    | array   | Yes      | Column definitions           |
-| `data`       | array   | Yes      | Table row data               |
-| `pageSize`   | number  | No       | Number of rows per page      |
-| `sortable`   | boolean | No       | Enables column sorting       |
-| `filterable` | boolean | No       | Enables search functionality |
+| Prop             | Type     | Required | Description               |
+| ---------------- | -------- | -------- | ------------------------- |
+| `columns`        | array    | Yes      | Column configuration      |
+| `data`           | array    | Yes      | Paginated row data        |
+| `search`         | string   | Yes      | Search input value        |
+| `onSearchChange` | function | Yes      | Updates search value      |
+| `sortConfig`     | object   | No       | Current sort state        |
+| `onSortChange`   | function | No       | Updates sort state        |
+| `page`           | number   | Yes      | Current page              |
+| `totalPages`     | number   | Yes      | Total page count          |
+| `onPageChange`   | function | Yes      | Page change handler       |
+| `sortable`       | boolean  | No       | Enables sorting           |
+| `filterable`     | boolean  | No       | Enables searching         |
+| `searchCol`      | string   | No       | Active search column      |
+| `setSearchCol`   | function | No       | Sets active search column |
+| `editFunction`   | function | No       | Edit row handler          |
+| `DeleteFunction` | function | No       | Delete row handler        |
 
 ---
 
@@ -129,51 +128,72 @@ export default App;
   field: "name",
   headerName: "Name",
   width: 400,
-  isSort: true
+  isSort: true,
+  searchable: true
 }
 ```
 
-* `field`: Key from the data object
-* `headerName`: Column header text
-* `width`: Column width
-* `isSort`: Enables sorting for the column
+### Column Options
+
+| Property     | Description                     |
+| ------------ | ------------------------------- |
+| `field`      | Key from data object            |
+| `headerName` | Column title                    |
+| `width`      | Column width                    |
+| `isSort`     | Enables sorting for this column |
+| `searchable` | Enables search for this column  |
+
+---
+
+## Column-wise Search Behavior
+
+* Clicking on a column header:
+
+  * Triggers sorting (if `isSort` is enabled)
+  * Activates search mode for that column (if `searchable` is true)
+* A search input appears **below the selected column header**
+* Search is applied **only to the active column**
+* Pagination resets to page 1 on search input change
 
 ---
 
 ## Behavior Details
 
-* Search filters across all data fields
-* Sorting applies only to columns marked with `isSort`
 * Sorting toggles between ascending and descending order
-* Pagination updates automatically after search or sorting
-* Page resets to first page when search input changes
-* Displays "No Data" when no rows are available
+* Search is applied only when a searchable column is active
+* Pagination updates automatically after filtering or sorting
+* Displays “No Data” when filtered results are empty
+* Edit and Delete buttons are optional and callback-driven
 
 ---
 
 ## Limitations
 
-* Client-side data handling only
-* Edit and Delete buttons are presentational
-* No row click handler
+* Client-side filtering, sorting, and pagination only
+* No multi-column search at the same time
 * No custom cell rendering
+* No keyboard navigation support
 
 ---
 
 ## Possible Enhancements
 
-* Server-side pagination and sorting
-* Row interaction callbacks
-* Column-based filtering
+* Server-side pagination and filtering
+* Multi-column filtering
 * Custom cell renderers
+* Row click handlers
+* Accessibility improvements
 * TypeScript support
 
 ---
 
 ## Conclusion
 
-This DataGrid component is built to demonstrate:
+This DataGrid component demonstrates:
 
-* Reusable component design
+* Reusable component architecture
 * Clean separation of logic and UI
-* Practical React patterns
+* Practical React patterns with `useMemo`
+* Configurable, column-driven behavior
+
+It can be easily extended for enterprise-level table requirements.
